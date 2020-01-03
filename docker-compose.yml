@@ -1,0 +1,40 @@
+version: '3.4'
+
+services:
+  directoryreader.webapp:
+    image: ${DOCKER_REGISTRY-}directoryreaderwebapp
+    build:
+      context: .
+      dockerfile: src/Web/DirectoryReader.Webapp/Dockerfile
+    container_name: directory-reader-webapp
+    volumes:
+      - type: volume
+        source: webappdata
+        target: /data
+        volume:
+          nocopy: true
+    ports:
+      - "9566:80"
+      - "44355:443"
+    networks:
+      - local
+
+  directoryreader.api:
+    image: ${DOCKER_REGISTRY-}directoryreaderapi
+    build:
+      context: .
+      dockerfile: src/Api/DirectoryReader.Api/Dockerfile
+    container_name: directory-reader-api
+    ports:
+      - "13155:80"
+      - "44336:443"
+    networks:
+      - local
+
+volumes:
+  webappdata:
+
+networks:
+  local:
+    driver: bridge
+
